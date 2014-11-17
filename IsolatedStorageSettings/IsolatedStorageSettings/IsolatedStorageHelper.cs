@@ -32,47 +32,10 @@ namespace IsolatedStorageSettings
     /// <param name="name"></param>
     /// <param name="directory"></param>
     /// <returns></returns>
-    public static async Task<T> ReadObjectAsync<T>(string name, string directory)
-    {
-      string data = await ReadTextFileAsync(name, directory);
-      return data.Deserialize<T>();
-    }
-
-    /// <summary>
-    /// Read an object.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="name"></param>
-    /// <param name="directory"></param>
-    /// <returns></returns>
     public static T ReadObject<T>(string name, string directory)
     {
       string data = ReadTextFile(name, directory);
       return data.Deserialize<T>();
-    }
-
-    /// <summary>
-    /// Save stream data to storage.
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="directory"></param>
-    /// <param name="data"></param>
-    /// <returns></returns>
-    public static async Task SaveDataAsync(string name, string directory, Stream data)
-    {
-      //Get folder path, if it doesn't exist then create it.
-      string folderPath = Path.Combine(getPath(), directory);
-      if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
-
-      //Get file path.
-      string filePath = Path.Combine(folderPath, name);
-
-      //Save file.
-      using (FileStream file = new FileStream(name, FileMode.OpenOrCreate))
-      {
-        await CopyStreamAsync(data, file);
-        file.Close();
-      }
     }
 
     /// <summary>
@@ -96,56 +59,6 @@ namespace IsolatedStorageSettings
       {
         await CopyStreamAsync(StringToStream(data), file);
         file.Close();
-      }
-    }
-
-    /// <summary>
-    /// Read a file from storage.
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="directory"></param>
-    /// <returns></returns>
-    public static async Task<Stream> ReadFileAsync(string name, string directory)
-    {
-      //Make file path.
-      string filePath = Path.Combine(getPath(), name);
-
-      //If file doesn't exist, return null.
-      if (!File.Exists(filePath)) throw new FileNotFoundException();
-
-      //Open file and read.
-      using (FileStream file = new FileStream(filePath, FileMode.Open))
-      {
-        MemoryStream ms = new MemoryStream();
-        await file.CopyToAsync(ms);
-        ms.Seek(0, SeekOrigin.Begin);
-        file.Close();
-        return ms;
-      }
-    }
-
-    /// <summary>
-    /// Read a text file from storage.
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="directory"></param>
-    /// <returns></returns>
-    public static async Task<string> ReadTextFileAsync(string name, string directory)
-    {
-      //Compose path.
-      string path = Path.Combine(getPath(), directory, name);
-
-      //If file doesn't exist, return null.
-      if (!File.Exists(path)) throw new FileNotFoundException();
-
-      //Open file and read.
-      using (FileStream file = new FileStream(path, FileMode.Open))
-      {
-        MemoryStream ms = new MemoryStream();
-        await file.CopyToAsync(ms);
-        ms.Seek(0, SeekOrigin.Begin);
-        file.Close();
-        return await StreamToStringAsync(ms);
       }
     }
 
