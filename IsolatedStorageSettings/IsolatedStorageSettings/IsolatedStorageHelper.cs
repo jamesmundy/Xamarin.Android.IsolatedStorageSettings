@@ -143,7 +143,7 @@ namespace IsolatedStorageSettings
     public static string getPath()
     {
       if (Debugger.IsAttached) return Android.OS.Environment.ExternalStorageDirectory.Path;
-      else return System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+      else return Application.Context.FilesDir.Path;
     }
   }
 }
