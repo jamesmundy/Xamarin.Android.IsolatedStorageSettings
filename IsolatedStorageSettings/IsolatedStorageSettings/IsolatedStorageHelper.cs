@@ -5,6 +5,7 @@ using System.Text;
 using Android.OS;
 using System.Threading.Tasks;
 using IsolatedStorageSettings.Extensions;
+using Android.App;
 
 namespace IsolatedStorageSettings
 {
